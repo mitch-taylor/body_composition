@@ -1,6 +1,5 @@
 # BODY COMPOSITION APP
 # TO ADD:
-# Where criteria on plots
 # Saving to file
 # Ability to edit data in table
 

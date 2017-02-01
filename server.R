@@ -13,9 +13,13 @@ shinyServer(function(input, output) {
     observeEvent(input$submit, {
         tmp <- data.frame(date = as.Date(input$date, origin="1970-01-01"), 
                           weight = input$weight, bf = input$bf, sm = input$sm,
+                          vf = input$vf)
+        write.csv(rbind(data, tmp), "weight_data_new.csv", row.names=FALSE)
+        tmp_full <- data.frame(date = as.Date(input$date, origin="1970-01-01"), 
+                          weight = input$weight, bf = input$bf, sm = input$sm,
                           vf = input$vf, bodycomp = 0, weight_7ma = 0,
                           bf_7ma = 0, sm_7ma = 0, bc_7ma = 0)
-        values$df_data <- rbind(values$df_data, tmp)
+        values$df_data <- rbind(values$df_data, tmp_full)
         calculate()
     })    
     
@@ -44,7 +48,7 @@ shinyServer(function(input, output) {
     # bodyfat plot
     output$bfplot = renderPlotly({
         calculate()
-        plot_ly(values$df_data, x = date, y = bf, 
+        plot_ly(values$df_data[!is.na(values$df_data$bf), ], x = date, y = bf, 
                 type = "scatter", mode = "lines", name = 'RAW') %>%
             add_trace(x = date, y = bf_7ma, name = 'MA7', mode = 'lines')
     })
@@ -52,7 +56,7 @@ shinyServer(function(input, output) {
     # skeletal muscle plot
     output$smplot = renderPlotly({
         calculate()
-        plot_ly(values$df_data, x = date, y = sm, 
+        plot_ly(values$df_data[!is.na(values$df_data$sm), ], x = date, y = sm, 
                 type = "scatter", mode = "lines", name = 'RAW') %>%
             add_trace(x = date, y = sm_7ma, name = 'MA7', mode = 'lines')
     })
@@ -60,11 +64,10 @@ shinyServer(function(input, output) {
     # bodycomp plot
     output$bcplot = renderPlotly({
         calculate()
-        plot_ly(values$df_data, x = date, y = bodycomp, 
+        plot_ly(values$df_data[!is.na(values$df_data$bodycomp), ], x = date, y = bodycomp, 
                 type = "scatter", mode = "lines", name = 'RAW') %>%
             add_trace(x = date, y = bc_7ma, name = 'MA7', mode = 'lines')
     })
     
 })
 
-class(data$date)
