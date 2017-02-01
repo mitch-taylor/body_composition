@@ -1,4 +1,8 @@
 # BODY COMPOSITION APP
+# TO ADD:
+# Where criteria on plots
+# Saving to file
+# Ability to edit data in table
 
 library(shiny); library(plotly)
 
@@ -21,11 +25,11 @@ shinyUI(fluidPage(
         # Plot Weight
         mainPanel(
             tabsetPanel(type = "tabs", 
-                        tabPanel("Data", dataTableOutput('datatable'))#, 
-                        #tabPanel("Weight", plotlyOutput('weightplot')),
-                        #tabPanel("Body Fat", plotlyOutput('bfplot')),
-                        #tabPanel("Skeletal Muscle", plotlyOutput('smplot')),
-                        #tabPanel("Body Composition", plotlyOutput('bcplot'))
+                        tabPanel("Data", dataTableOutput('datatable')), 
+                        tabPanel("Weight", plotlyOutput('weightplot')),
+                        tabPanel("Body Fat", plotlyOutput('bfplot')),
+                        tabPanel("Skeletal Muscle", plotlyOutput('smplot')),
+                        tabPanel("Body Composition", plotlyOutput('bcplot'))
             )
         )
     )
