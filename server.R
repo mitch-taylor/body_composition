@@ -1,9 +1,9 @@
 ### BODY COMPOSITION APP
 
-library(shiny); library(TTR)
+library(shiny); library(TTR);
 
-setwd("C:/Users/MT84249/Desktop/personal/coursera/data_products/body_composition")
-data <- read.csv("weight_data.csv")
+sheet <- gs_title('body_data')
+data <- gs_read_csv(sheet)
 data$date <- as.Date(data$date, format = "%m/%d/%Y")
 
 # Define server logic
@@ -14,7 +14,7 @@ shinyServer(function(input, output) {
         tmp <- data.frame(date = as.Date(input$date, origin="1970-01-01"), 
                           weight = input$weight, bf = input$bf, sm = input$sm,
                           vf = input$vf)
-        write.csv(rbind(data, tmp), "weight_data_new.csv", row.names=FALSE)
+        gs_add_row(sheet, input = tmp)
         tmp_full <- data.frame(date = as.Date(input$date, origin="1970-01-01"), 
                           weight = input$weight, bf = input$bf, sm = input$sm,
                           vf = input$vf, bodycomp = 0, weight_7ma = 0,
@@ -40,34 +40,36 @@ shinyServer(function(input, output) {
     # weight plot
     output$weightplot = renderPlotly({
         calculate()
-        plot_ly(values$df_data, x = date, y = weight, 
+        plot_ly(values$df_data, x = ~date, y = ~weight, 
                 type = "scatter", mode = "lines", name = 'RAW') %>%
-        add_trace(x = date, y = weight_7ma, name = 'MA7', mode = 'lines')
+        add_trace(x = ~date, y = ~weight_7ma, name = 'MA7', mode = 'lines')
     })
     
     # bodyfat plot
     output$bfplot = renderPlotly({
         calculate()
-        plot_ly(values$df_data[!is.na(values$df_data$bf), ], x = date, y = bf, 
+        plot_ly(values$df_data[!is.na(values$df_data$bf), ], x = ~date, y = ~bf, 
                 type = "scatter", mode = "lines", name = 'RAW') %>%
-            add_trace(x = date, y = bf_7ma, name = 'MA7', mode = 'lines')
+            add_trace(x = ~date, y = ~bf_7ma, name = 'MA7', mode = 'lines')
     })
     
     # skeletal muscle plot
     output$smplot = renderPlotly({
         calculate()
-        plot_ly(values$df_data[!is.na(values$df_data$sm), ], x = date, y = sm, 
+        plot_ly(values$df_data[!is.na(values$df_data$sm), ], x = ~date, y = ~sm, 
                 type = "scatter", mode = "lines", name = 'RAW') %>%
-            add_trace(x = date, y = sm_7ma, name = 'MA7', mode = 'lines')
+            add_trace(x = ~date, y = ~sm_7ma, name = 'MA7', mode = 'lines')
     })
     
     # bodycomp plot
     output$bcplot = renderPlotly({
         calculate()
-        plot_ly(values$df_data[!is.na(values$df_data$bodycomp), ], x = date, y = bodycomp, 
+        plot_ly(values$df_data[!is.na(values$df_data$bodycomp), ], x = ~date, y = ~bodycomp, 
                 type = "scatter", mode = "lines", name = 'RAW') %>%
-            add_trace(x = date, y = bc_7ma, name = 'MA7', mode = 'lines')
+            add_trace(x = ~date, y = ~bc_7ma, name = 'MA7', mode = 'lines')
     })
     
 })
+
+
 
