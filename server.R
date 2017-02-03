@@ -1,6 +1,6 @@
 ### BODY COMPOSITION APP
 
-library(shiny); library(TTR);
+library(shiny); library(TTR); library(googlesheets)
 
 sheet <- gs_title('body_data')
 data <- gs_read_csv(sheet)
