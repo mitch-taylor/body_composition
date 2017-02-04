@@ -11,7 +11,7 @@ shinyServer(function(input, output) {
     values <- reactiveValues(df_data = data)
     
     observeEvent(input$submit, {
-        tmp <- data.frame(date = as.Date(input$date, origin="1970-01-01"), 
+        tmp <- data.frame(date = as.Date(input$date, format = "%m/%d/%Y", origin="1970-01-01"), 
                           weight = input$weight, bf = input$bf, sm = input$sm,
                           vf = input$vf)
         gs_add_row(sheet, input = tmp)
