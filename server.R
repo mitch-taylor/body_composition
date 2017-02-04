@@ -4,14 +4,14 @@ library(shiny); library(TTR); library(googlesheets)
 
 sheet <- gs_title('body_data')
 data <- gs_read_csv(sheet)
-data$date <- as.Date(data$date, format = "%m/%d/%Y")
+data$date <- as.Date(data$date, format = "%Y-%m-%d")
 
 # Define server logic
 shinyServer(function(input, output) {
     values <- reactiveValues(df_data = data)
     
     observeEvent(input$submit, {
-        tmp <- data.frame(date = as.Date(input$date, format = "%m/%d/%Y", origin="1970-01-01"), 
+        tmp <- data.frame(date = as.Date(input$date, format = "%Y-%m-%d", origin="1970-01-01"), 
                           weight = input$weight, bf = input$bf, sm = input$sm,
                           vf = input$vf)
         gs_add_row(sheet, input = tmp)
